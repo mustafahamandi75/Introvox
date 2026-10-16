@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INTROVOX | AI Services</title>
+  <style>
+    :root {
+      --ivory: #f7f3ee;
+      --ivory-deep: #efe7df;
+      --ink: #171512;
+      --ink-soft: #4d473f;
+      --gold: #b89b6a;
+      --gold-soft: #d7c29f;
+      --panel: rgba(255,255,255,0.7);
+      --line: rgba(23,21,18,0.12);
+      --shadow: 0 22px 48px rgba(20, 15, 10, 0.12);
+      --radius: 26px;
+    }
+
+    * { box-sizing: border-box; }
+    html {
+      font-size: 94%;
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(184,155,106,0.08), transparent 30%),
+        linear-gradient(180deg, #f8f4f0 0%, #f4efe9 100%);
+      color: var(--ink);
+      font-family: "Segoe UI", Arial, sans-serif;
+      line-height: 1.65;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(248,244,240,0.72);
+      border-bottom: 1px solid rgba(23,21,18,0.06);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 78px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.15rem;
+      font-weight: 600;
+      letter-spacing: -0.075em;
+      color: var(--ink);
+    }
+
+    .brand-name span {
+      color: var(--gold);
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      font-size: 0.96rem;
+      color: var(--ink-soft);
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .btn {
+      display: inline-block;
+      text-align: center;
+      background: linear-gradient(135deg, var(--gold), #d7c29f);
+      color: #171512;
+      border: 1px solid rgba(23,21,18,0.06);
+      border-radius: 999px;
+      padding: 16px 30px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 12px 26px rgba(184,155,106,0.25);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 28px rgba(184,155,106,0.3);
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.45);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .hero {
+      padding: 74px 0 48px;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 38px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: rgba(184,155,106,0.12);
+      border: 1px solid rgba(184,155,106,0.25);
+      color: #725a36;
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 9px 14px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: clamp(1.45rem, 2.4vw, 2.2rem);
+      line-height: 0.94;
+      letter-spacing: -0.07em;
+      color: var(--ink);
+    }
+
+    .subhead {
+      max-width: 620px;
+      font-size: 1.1rem;
+      color: var(--ink-soft);
+      margin: 0 0 28px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .trust-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      color: var(--ink-soft);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .trust-row span {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .trust-row span::before {
+      content: "•";
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(184,155,106,0.16);
+      color: var(--gold);
+      text-align: center;
+      line-height: 20px;
+      font-size: 1rem;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 560px;
+      background:
+        linear-gradient(135deg, rgba(184,155,106,0.12), rgba(255,255,255,0.6)),
+        #efebe5;
+      border: 1px solid rgba(23,21,18,0.1);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-panel {
+      position: absolute;
+      inset: 26px 26px 26px 26px;
+      background: rgba(255,255,255,0.54);
+      border: 1px solid rgba(23,21,18,0.08);
+      border-radius: 26px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .panel-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .dot-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(23,21,18,0.18);
+    }
+
+    .panel-pill {
+      border: 1px solid rgba(23,21,18,0.08);
+      background: rgba(255,255,255,0.5);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(23,21,18,0.08);
+      border-radius: 22px;
+      padding: 18px 18px 12px;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 2rem;
+      letter-spacing: -0.06em;
+      color: var(--ink);
+    }
+
+    .stat-card span {
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+    }
+
+    .chart {
+      margin-top: 16px;
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(23,21,18,0.08);
+      border-radius: 22px;
+      padding: 18px;
+      height: 170px;
+      display: flex;
+      align-items: end;
+      gap: 12px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      background: linear-gradient(180deg, rgba(184,155,106,0.8), rgba(23,21,18,0.9));
+      border-radius: 14px 14px 0 0;
+    }
+
+    .workflow-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .workflow-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid rgba(23,21,18,0.08);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.62);
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+    }
+
+    .workflow-step {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: rgba(184,155,106,0.18);
+      color: #725a36;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    section {
+      padding: 56px 0;
+    }
+
+    .section-title {
+      font-size: clamp(1.9rem, 3.4vw, 3rem);
+      line-height: 1.06;
+      letter-spacing: -0.06em;
+      margin: 0 0 18px;
+      max-width: 760px;
+      color: var(--ink);
+    }
+
+    .proof-title {
+      font-size: clamp(1.55rem, 2.6vw, 2.35rem);
+    }
+
+    .section-copy {
+      max-width: 760px;
+      font-size: 1rem;
+      color: var(--ink-soft);
+      margin: 0 0 30px;
+    }
+
+    .problem-grid,
+    .benefits-grid,
+    .faq-grid {
+      display: grid;
+      gap: 22px;
+    }
+
+    .problem-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .problem-card,
+    .benefit-card,
+    .faq-item {
+      background: rgba(255,255,255,0.5);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 28px 24px;
+      box-shadow: 0 10px 25px rgba(23,21,18,0.02);
+    }
+
+    .problem-card h3,
+    .benefit-card h3,
+    .faq-item h3 {
+      margin: 0 0 10px;
+      font-size: 1.22rem;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+    }
+
+    .problem-card p,
+    .benefit-card p,
+    .faq-item p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+    }
+
+    .solution-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .solution-visual {
+      min-height: 420px;
+      position: relative;
+      background:
+        linear-gradient(135deg, rgba(184,155,106,0.14), rgba(255,255,255,0.7)),
+        #f1eae1;
+      border-radius: 30px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .solution-card {
+      position: absolute;
+      inset: 24px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(23,21,18,0.08);
+      border-radius: 26px;
+      padding: 22px;
+    }
+
+    .member-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .member {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(184,155,106,0.28), rgba(23,21,18,0.12));
+      border: 1px solid rgba(23,21,18,0.1);
+    }
+
+    .benefits-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .benefit-card {
+      min-height: 280px;
+    }
+
+    .benefit-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(184,155,106,0.18), rgba(255,255,255,0.7));
+      border: 1px solid rgba(23,21,18,0.08);
+      margin-bottom: 18px;
+    }
+
+    .logos {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(100px, 1fr));
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .logo-box {
+      background: rgba(255,255,255,0.58);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px 14px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    .quote {
+      background: rgba(255,255,255,0.58);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 26px 22px;
+      color: var(--ink-soft);
+      font-size: 1rem;
+    }
+
+    .quote strong {
+      display: block;
+      margin-top: 18px;
+      color: var(--ink);
+      font-size: 0.95rem;
+    }
+
+    .cta-block {
+      background: linear-gradient(135deg, rgba(23,21,18,1), rgba(51,46,38,0.95));
+      border-radius: 30px;
+      padding: 38px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .cta-block h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 2.6vw, 2.35rem);
+      line-height: 1.04;
+      letter-spacing: -0.06em;
+      max-width: 760px;
+    }
+
+    .cta-block p {
+      margin: 12px 0 0;
+      color: rgba(255,255,255,0.7);
+      max-width: 700px;
+    }
+
+    .faq-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .faq-item {
+      padding: 24px 22px;
+    }
+
+    .contact-form {
+      max-width: 760px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.58);
+      box-shadow: 0 10px 25px rgba(23,21,18,0.02);
+    }
+
+    .form-field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .form-field label {
+      color: var(--ink);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .form-field input {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.8);
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .form-field input:focus {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    .form-note,
+    .form-submit {
+      grid-column: 1 / -1;
+    }
+
+    .form-note {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+    }
+
+    .form-submit {
+      font: inherit;
+    }
+
+    footer {
+      padding: 28px 0 60px;
+      color: var(--ink-soft);
+      font-size: 0.96rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner,
+      .solution-wrap,
+      .problem-grid,
+      .benefits-grid,
+      .faq-grid,
+      .testimonials {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .cta-block {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero-actions {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+      }
+      .contact-form {
+        grid-template-columns: 1fr;
+        padding: 22px;
+      }
+      .logos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar" id="top">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="INTROVOX home">
+        <span class="brand-name">INTRO<span>VOX</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="#solution">How it works</a>
+        <a href="#benefits">Benefits</a>
+        <a href="#proof">Proof</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact" class="btn secondary">Request information</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div>
+          <div class="eyebrow">AI services for ambitious businesses</div>
+          <h1>INTROVOX helps you turn busywork into momentum.</h1>
+          <p class="subhead">
+            You’re busy. You’re doing too much, and you know there’s a better way to grow. We help you use AI services in a way that saves time, cuts the chaos, and makes your business feel more refined, more efficient, and easier to run.
+          </p>
+          <div class="hero-actions">
+            <a href="#contact" class="btn">Request information</a>
+            <a href="#solution" class="btn secondary">See how it works</a>
+          </div>
+          <div class="trust-row">
+            <span>Quiet efficiency</span>
+            <span>Smarter systems</span>
+            <span>Clearer growth</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="Luxury dashboard mockup">
+          <div class="hero-panel">
+            <div class="panel-top">
+              <div class="dot-row">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+              <div class="panel-pill">A more thoughtful workflow</div>
+              </div>
+
+              <div class="stats">
+                <div class="stat-card">
+                  <strong>01</strong>
+                  <span>Understand your process</span>
+                </div>
+                <div class="stat-card">
+                  <strong>02</strong>
+                  <span>Find useful AI opportunities</span>
+                </div>
+              </div>
+
+              <div class="workflow-list" aria-label="A simple AI planning process">
+                <div class="workflow-item"><span class="workflow-step">1</span>Start with your real business needs</div>
+                <div class="workflow-item"><span class="workflow-step">2</span>Choose practical solutions together</div>
+                <div class="workflow-item"><span class="workflow-step">3</span>Build a workflow that fits you</div>
+              </div>
+
+              <div class="panel-pill" style="align-self:flex-start; margin-top: 12px;">Designed around your business</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2 class="section-title proof-title">You’re not looking for more hustle. You’re looking for a smarter system.</h2>
+        <p class="section-copy">
+          Most businesses aren’t failing because they lack effort. They’re failing because they’re stuck in the weeds: repetitive tasks, inconsistent processes, missed opportunities, and too much admin eating up the day. You’re doing the work, but not always the work that moves the needle.
+        </p>
+        <div class="problem-grid">
+          <div class="problem-card">
+            <h3>Too much on your plate</h3>
+            <p>You’re doing all the busywork and still not moving the needle. The day gets swallowed by admin, follow-ups, and tasks that never end.</p>
+          </div>
+          <div class="problem-card">
+            <h3>Leads feel inconsistent</h3>
+            <p>You keep chasing leads, but nothing is consistent. It feels like growth is happening in bursts, not in a steady, reliable way.</p>
+          </div>
+          <div class="problem-card">
+            <h3>Decision-making is harder than it should be</h3>
+            <p>You know you need help, but you don’t want more complexity. You need clarity, not another tool to manage.</p>
+          </div>
+          <div class="problem-card">
+            <h3>Stress is slowing your business down</h3>
+            <p>You’re overwhelmed, the process is messy, and every day feels like a scramble instead of a plan. That stress is expensive.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="solution">
+      <div class="container">
+        <h2 class="section-title proof-title">What if your workday felt lighter?</h2>
+        <div class="solution-wrap">
+          <div>
+            <p class="section-copy">
+              That’s where INTROVOX comes in. We help you put AI services to work in the places that matter most: automating repetitive tasks, improving operations, uncovering new opportunities, and making better decisions with less guesswork.
+            </p>
+            <p class="section-copy">
+              We don’t just plug in tools and leave you to figure it out. We help you build a smarter, simpler way to work. The goal is simple: give you more time, more clarity, and more traction without adding more chaos.
+            </p>
+          </div>
+
+          <div class="solution-visual" aria-label="Business owner strategy consultation">
+            <div class="solution-card">
+              <div class="member-row">
+                <div class="member"></div>
+                <div class="member"></div>
+                <div class="member"></div>
+              </div>
+              <h3 style="margin:0 0 8px; font-size:1.6rem; letter-spacing:-0.04em;">A polished system, built around your business</h3>
+              <p style="margin:0; color:var(--ink-soft);">
+                We identify the bottlenecks, remove friction, and turn the right AI services into a system you can actually use with confidence.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="benefits">
+      <div class="container">
+        <h2 class="section-title proof-title">More time. Less friction. Better decisions.</h2>
+
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-icon"></div>
+            <h3>Save time with the right automations</h3>
+            <p>You stop wasting hours on manual work that should be handled automatically. We help you cut the busywork so you can focus on the work that actually grows the business.</p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-icon"></div>
+            <h3>Make smarter moves with real clarity</h3>
+            <p>You stop guessing and start making decisions from cleaner data, better systems, and clearer insight. That means fewer blind spots and more confidence in what to do next.</p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-icon"></div>
+            <h3>Grow without the grind</h3>
+            <p>You don’t need to add more people or more stress just to scale. We help you build systems that support growth, improve client experience, and keep your business running smoother.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="proof">
+      <div class="container">
+        <h2 class="section-title proof-title">A clear path to practical AI</h2>
+        <p class="section-copy">
+          You don’t need to arrive with all the answers. Start with the parts of your work that feel slow, repetitive, or harder than they should be. We’ll explore where AI may help and shape a next step around your needs.
+        </p>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-icon"></div>
+            <h3>Start with your goals</h3>
+            <p>We learn how your business works and what you want to improve before recommending a solution.</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon"></div>
+            <h3>Focus on what’s useful</h3>
+            <p>We look for practical opportunities to reduce repetitive work or make a process clearer.</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon"></div>
+            <h3>Move at a sensible pace</h3>
+            <p>You can review the options and decide what fits before choosing how to move forward.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <h2 class="section-title proof-title">Tell us how to reach you</h2>
+        <p class="section-copy">Tell us your name and the best way to reach you about your business needs.</p>
+        <form class="contact-form" action="https://formsubmit.co/duvox.ai@gmail.com" method="POST">
+          <input type="hidden" name="_cc" value="hvox@gmail.com" />
+          <input type="hidden" name="_subject" value="New INTROVOX information request" />
+          <div class="form-field">
+            <label for="customer-name">Your name</label>
+            <input id="customer-name" name="name" type="text" autocomplete="name" required />
+          </div>
+          <div class="form-field">
+            <label for="business-email">Business email</label>
+            <input id="business-email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="form-field">
+            <label for="phone-number">Phone number</label>
+            <input id="phone-number" name="phone" type="tel" autocomplete="tel" required />
+          </div>
+          <p class="form-note">When you submit, your contact details will be processed by FormSubmit and emailed to INTROVOX. Please don’t include sensitive information.</p>
+          <button class="btn form-submit" type="submit">Request information</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="cta">
+      <div class="container">
+        <div class="cta-block">
+          <div>
+            <h2>Let’s build a system that works with your business, not against it.</h2>
+            <p>You don’t need another complicated tool or another expensive consulting project. You need a practical plan that helps you get more done and move your business forward with less friction.</p>
+          </div>
+          <a href="#contact" class="btn" style="background: linear-gradient(135deg, #f4ead8, #d9c29a);">Request information</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container">
+        <h2 class="section-title proof-title">Questions people usually ask before they start</h2>
+
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Is this only for bigger businesses?</h3>
+            <p>No. We work with businesses that want to grow smarter, not just bigger. If you’re overwhelmed by repetitive work and want a cleaner system, we can help.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Do I need to know a lot about AI?</h3>
+            <p>No. We make it simple. You focus on your goals; we help translate that into a workable system.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>What happens in the first call?</h3>
+            <p>We look at your current process, identify the biggest bottlenecks, and show you where AI services can create the biggest win without adding complexity.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      © 2026 INTROVOX. Built for clearer growth.
+    </div>
+  </footer>
+
+</body>
+</html>
